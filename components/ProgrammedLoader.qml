@@ -1,24 +1,27 @@
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 
-Item {
-    property string source
+Loader {
     property date begin_at
     property date end_at
+    property url delayed_source
 
-    Loader {
-        id: loader
-        anchors.fill: parent
+    Component.onCompleted: { 
+        delayed_source = source; 
+        source = (Date.now() >= begin_at && Date.now() < end_at) ? delayed_source : ""
+        //source = ""
     }
     Timer {
         interval: parent.begin_at - Date.now()
-        onTriggered: loader.source = parent.source
+        onTriggered: parent.source = parent.delayed_source
         running: true
+        //parent.begin_at > Date.now()
     }
     Timer {
         interval: parent.end_at - Date.now()
-        onTriggered: loader.source = "undefined"
+        onTriggered: parent.source = undefined
         running: true
+        //parent.end_at > Date.now()
     }
 }
