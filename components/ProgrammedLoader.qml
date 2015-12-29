@@ -10,18 +10,15 @@ Loader {
     Component.onCompleted: { 
         delayed_source = source; 
         source = (Date.now() >= begin_at && Date.now() < end_at) ? delayed_source : ""
-        //source = ""
     }
     Timer {
         interval: parent.begin_at - Date.now()
         onTriggered: parent.source = parent.delayed_source
-        running: true
-        //parent.begin_at > Date.now()
+        running: parent.begin_at > Date.now()
     }
     Timer {
         interval: parent.end_at - Date.now()
-        onTriggered: parent.source = undefined
-        running: true
-        //parent.end_at > Date.now()
+        onTriggered: parent.source = ""
+        running: parent.end_at > Date.now()
     }
 }
